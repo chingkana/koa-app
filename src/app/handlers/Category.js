@@ -9,24 +9,19 @@ class Category {
 
     async getCategory() {
         try {
-            let result = [];
-            mongo.mongoConnect((err, db) => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    mongo.find(db, {}, (err, resultSet) => {
-                        if (err) {
-                            console.error(err);
-                        } else {
-                            console.log(resultSet);
-                            result = resultSet;
-                            console.log(result);
-                        }
-                    });
-                }
-                db.close();
-            });
-            return response.success(result);
+            let res = [];
+            mongo.mongoConnect()
+                .then(db => {
+                    mongo.find(db, {})
+                        .then(result => {
+                            console.log("result", result);
+                            this.res = result;
+                        })
+                        .catch(err => response.error(err));
+                    db.close();
+                    return response.success(res);
+                })
+                .catch(err => response.error(err));
         } catch (err) {
             console.error("Error occurred in category", err);
             return response.error("Error occurred in category");

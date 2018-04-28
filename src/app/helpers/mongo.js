@@ -2,37 +2,32 @@ const MongoClient = require('mongodb').MongoClient;
 const config = require("../../../src/config.json");
 const url = config.url || "mongodb://localhost:27017";
 
-function mongoConnect(callback) {
-    try {
+function mongoConnect() {
+    return new Promise((resolve, reject) => {
         MongoClient.connect(url, (mongoErr, mongoConnection) => {
             if (mongoErr) {
                 console.error("Failed to establish a connection with mongodb: ", mongoErr);
-                callback(mongoErr, null);
+                reject(mongoErr);
             } else {
-                callback(null, mongoConnection);
+                console.log("Connection established!!");
+                resolve(mongoConnection);
             }
         });
-    }
-    catch (objEx) {
-        callback("Failed to establish a connection with mongodb:. Error: " + objEx, null);
-    }
+    });
 }
 
-function find(client, query, callback) {
-    try {
+function find(client, query) {
+    return new Promise((resolve, reject) => {
         const db = client.db('test');
         db.collection('categories').find({}).toArray((findErr, resultSet) => {
             if (findErr) {
                 console.error("Operation failed while fetching the data from mongodb: ", findErr);
-                callback(findErr, null);
+                reject(findErr);
             } else {
-                callback(null, resultSet);
+                resolve(resultSet);
             }
         });
-    }
-    catch (objEx) {
-        callback("Operation failed while fetching the data from mongodb. Error: " + objEx, null);
-    }
+    });
 }
 
 module.exports = {
