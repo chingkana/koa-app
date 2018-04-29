@@ -4,8 +4,9 @@ exports.error = message => {
     };
 };
 
-exports.success = data => {
+exports.success = (message, data = []) => {
     return {
+        message,
         data
     };
 };

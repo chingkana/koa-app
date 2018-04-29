@@ -8,8 +8,8 @@ class Category {
     }
 
     async getCategory() {
+        let res = [];
         try {
-            let res = [];
             mongo.mongoConnect()
                 .then(db => {
                     mongo.find(db, {})
@@ -19,13 +19,13 @@ class Category {
                         })
                         .catch(err => response.error(err));
                     db.close();
-                    return response.success(res);
                 })
                 .catch(err => response.error(err));
         } catch (err) {
             console.error("Error occurred in category", err);
             return response.error("Error occurred in category");
         }
+        return response.success(res);
     }
 }
 module.exports = Category;

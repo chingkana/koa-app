@@ -30,7 +30,37 @@ function find(client, query) {
     });
 }
 
+function insert(client, document) {
+    return new Promise((resolve, reject) => {
+        const db = client.db('test');
+        db.collection('products').insert(document, { w: 1 }, (insertErr, result) => {
+            if (insertErr) {
+                console.error("Operation failed while dumping into mongo");
+                reject(insertErr);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
+
+function update(client, query, pushOrSet) {
+    return new Promise((resolve, reject) => {
+        const db = client.db('test');
+        db.collection('products').update(query, pushOrSet, (updateErr, updateResult) => {
+            if (updateErr) {
+                console.error("Operation failed while Updating the data in mongodb");
+                reject(updateErr);
+            } else {
+                resolve(updateResult);
+            }
+        });
+    });
+}
+
 module.exports = {
     mongoConnect: mongoConnect,
-    find: find
+    find: find,
+    insert: insert,
+    update: update
 };
