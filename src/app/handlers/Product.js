@@ -9,13 +9,39 @@ class Product {
 
     async addProduct(data) {
         try {
+            const [
+                _id,
+                name,
+                size,
+                category_id,
+                sub_category
+            ] = [
+                    data["_id"],
+                    data["name"],
+                    data["size"],
+                    data["category_id"],
+                    data["sub_category"]
+                ];
             let client = await mongo.mongoConnect();
-            await mongo.insert(client, data);
+            await mongo.insert(client, "products", { _id, name, size, "timestamp": new Date() });
+            let elementKey = `sub_categories.${sub_category}`;
+            let pushOrSet = {
+                $push: {
+                    [elementKey]: _id
+                }
+            };
+
+            let updateStatus = await mongo.update(client, "categories", { "_id": category_id, [elementKey]: { $exists: true } }, pushOrSet);
+
+            if (updateStatus.result.nModified) {
+                return response.success("Added the product successfully!!. Also mapped the product to Sub category");
+            }
+            else {
+                return response.success(`Added the product successfully, but ${sub_category} does not exists. Hence unable to map product with Sub category ${sub_category}.`);
+            }
         } catch (err) {
-            console.error("Error occurred in product", err);
             return response.error(`Error occurred in product ${err}`);
         }
-        return response.success("Added the record successfully!!");
     }
 
     async updateProduct(_id, value) {
@@ -24,9 +50,15 @@ class Product {
             let pushOrSet = {
                 $set: value
             };
-            await mongo.update(client, { _id }, pushOrSet);
+            let updateStatus = await mongo.update(client, "products", { _id }, pushOrSet);
+
+            if (updateStatus.result.nModified) {
+                return response.success("Updated the product successfully!!");
+            }
+            else {
+                return response.success("Unable to update the record. Either the product does not exist or the product details are unchanged");
+            }
         } catch (err) {
-            console.error("Error occurred in product", err);
             return response.error(`Error occurred in product ${err}`);
         }
         return response.success("Updated the record successfully!!");

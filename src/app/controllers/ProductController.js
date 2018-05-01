@@ -6,28 +6,39 @@ module.exports.product = async ctx => {
     const [
         id,
         name,
-        size
+        size,
+        category_id,
+        sub_category,
     ] = [
             data["_id"],
             data["name"],
-            data["size"]
+            data["size"],
+            data["category_id"],
+            data["sub_category"]
         ];
 
     if (!id || id.trim() === "") {
-        console.error("id cannot be empty");
         ctx.body = response.error("id cannot be empty");
         return;
     }
 
     if (!name || name.trim() === "") {
-        console.error("name cannot be empty");
         ctx.body = response.error("name cannot be empty");
         return;
     }
 
     if (typeof size === Array) {
-        console.error("size cannot be empty");
         ctx.body = response.error("size cannot be empty");
+        return;
+    }
+
+    if (!category_id || category_id.trim === "") {
+        ctx.body = response.error("category_id cannot be empty");
+        return;
+    }
+
+    if (!sub_category || sub_category.trim === "") {
+        ctx.body = response.error("sub_category cannot be empty");
         return;
     }
 

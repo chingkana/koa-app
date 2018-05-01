@@ -16,10 +16,10 @@ function mongoConnect() {
     });
 }
 
-function find(client, query) {
+function find(client, collection, query) {
     return new Promise((resolve, reject) => {
         const db = client.db('test');
-        db.collection('categories').find({}).toArray((findErr, resultSet) => {
+        db.collection(collection).find({}).toArray((findErr, resultSet) => {
             if (findErr) {
                 console.error("Operation failed while fetching the data from mongodb: ", findErr);
                 reject(findErr);
@@ -30,10 +30,10 @@ function find(client, query) {
     });
 }
 
-function insert(client, document) {
+function insert(client, collection, document) {
     return new Promise((resolve, reject) => {
         const db = client.db('test');
-        db.collection('products').insert(document, { w: 1 }, (insertErr, result) => {
+        db.collection(collection).insert(document, { w: 1 }, (insertErr, result) => {
             if (insertErr) {
                 console.error("Operation failed while dumping into mongo");
                 reject(insertErr);
@@ -44,10 +44,10 @@ function insert(client, document) {
     });
 }
 
-function update(client, query, pushOrSet) {
+function update(client, collection, query, pushOrSet) {
     return new Promise((resolve, reject) => {
         const db = client.db('test');
-        db.collection('products').update(query, pushOrSet, (updateErr, updateResult) => {
+        db.collection(collection).update(query, pushOrSet, (updateErr, updateResult) => {
             if (updateErr) {
                 console.error("Operation failed while Updating the data in mongodb");
                 reject(updateErr);

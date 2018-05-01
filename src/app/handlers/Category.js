@@ -11,12 +11,21 @@ class Category {
         let res = [];
         try {
             let client = await mongo.mongoConnect();
-            res = await mongo.find(client, {});
+            res = await mongo.find(client, "categories", {});
         } catch (err) {
-            console.error("Error occurred in category", err);
             return response.error(`Error occurred in category${err}`);
         }
         return response.success("success", res);
+    }
+
+    async addCategory(data) {
+        try {
+            let client = await mongo.mongoConnect();
+            await mongo.insert(client, "categories", data);
+        } catch (err) {
+            return response.error(`Error occurred in category ${err}`);
+        }
+        return response.success("Added the record successfully!!");
     }
 }
 module.exports = Category;

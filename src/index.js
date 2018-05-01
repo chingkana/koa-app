@@ -12,7 +12,7 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
-        console.error("Error occurred while routing the request", err);
+        console.error(`Error occurred while routing the request ${err}`);
         ctx.body = response.error(
             "Please be patient while we resolve the issue"
         );
@@ -26,5 +26,5 @@ require("./app/router")(router);
 app.listen(config.port || 80);
 
 process.on('uncaughtException', function (err) {
-    console.error("Error", err);
+    console.error(`Error: ${err}`);
 });
