@@ -23,7 +23,7 @@ app.use(router.routes()).use(router.allowedMethods());
 
 require("./app/router")(router);
 
-app.listen(config.port || 80);
+app.listen(process.env.PORT || 3000);
 
 process.on('uncaughtException', function (err) {
     console.error(`Error: ${err}`);

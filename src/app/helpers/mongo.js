@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const config = require("../../../src/config.json");
+const config = require("../../config.json");
 const url = config.url || "mongodb://localhost:27017";
 
 function mongoConnect() {
