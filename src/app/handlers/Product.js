@@ -9,41 +9,25 @@ class Product {
 
     async addProduct(data) {
         try {
-            mongo.mongoConnect()
-                .then(db => {
-                    mongo.insert(db, data)
-                        .then(result => {
-                            console.log("result", result);
-                        })
-                        .catch(err => response.error(err));
-                    db.close();
-                })
-                .catch(err => response.error(err));
+            let client = await mongo.mongoConnect();
+            await mongo.insert(client, data);
         } catch (err) {
             console.error("Error occurred in product", err);
-            return response.error("Error occurred in product");
+            return response.error(`Error occurred in product ${err}`);
         }
         return response.success("Added the record successfully!!");
     }
 
     async updateProduct(_id, value) {
         try {
-            mongo.mongoConnect()
-                .then(db => {
-                    let pushOrSet = {
-                        $set: value
-                    };
-                    mongo.update(db, { _id }, pushOrSet)
-                        .then(result => {
-                            console.log("result", result.result.nModified);
-                        })
-                        .catch(err => response.error(err));
-                    db.close();
-                })
-                .catch(err => response.error(err));
+            let client = await mongo.mongoConnect();
+            let pushOrSet = {
+                $set: value
+            };
+            await mongo.update(client, { _id }, pushOrSet);
         } catch (err) {
             console.error("Error occurred in product", err);
-            return response.error("Error occurred in product");
+            return response.error(`Error occurred in product ${err}`);
         }
         return response.success("Updated the record successfully!!");
     }

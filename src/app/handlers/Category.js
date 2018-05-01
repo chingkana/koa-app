@@ -10,22 +10,13 @@ class Category {
     async getCategory() {
         let res = [];
         try {
-            mongo.mongoConnect()
-                .then(db => {
-                    mongo.find(db, {})
-                        .then(result => {
-                            console.log("result", result);
-                            this.res = result;
-                        })
-                        .catch(err => response.error(err));
-                    db.close();
-                })
-                .catch(err => response.error(err));
+            let client = await mongo.mongoConnect();
+            res = await mongo.find(client, {});
         } catch (err) {
             console.error("Error occurred in category", err);
-            return response.error("Error occurred in category");
+            return response.error(`Error occurred in category${err}`);
         }
-        return response.success(res);
+        return response.success("success", res);
     }
 }
 module.exports = Category;
